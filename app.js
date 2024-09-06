@@ -1,5 +1,9 @@
 const express = require('express');
 const app = express();
+const config = require('./src/config/config');
+const routes = require('./src/api/routes');
+
+app.use('/', routes);
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
