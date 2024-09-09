@@ -32,6 +32,27 @@ exports.getEarthquakes = async (req, res) => {
     }
 };
 
-exports.getHurricanes = (req, res) => {
-    res.send('Hurricane data will be here.');
+exports.getHurricanes = async (req, res) => {
+    try {
+        const alertsUrl = 'https://api.weather.gov/alerts/active';
+
+        const response = await axios.get(alertsUrl, {
+            params: {
+                event: ['Hurricane', 'Severe Storm'], // Fetch alerts for hurricanes and severe storms
+                status: 'actual'
+            }
+        });
+
+        // Filter alerts by type and possibly by geographical relevance if needed
+        const filteredAlerts = response.data.features.filter(alert => 
+            alert.properties.category === 'Met' && // Meteorological alerts
+            (alert.properties.event === 'Hurricane' || alert.properties.event === 'Severe Storm')
+        );
+
+        console.log("Weather Alerts:", filteredAlerts);
+        res.json(filteredAlerts);
+    } catch (error) {
+        console.error("Error fetching weather alerts:", error);
+        res.status(500).send('Failed to fetch weather alerts');
+    }
 };
