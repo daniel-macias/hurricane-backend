@@ -7,11 +7,21 @@ exports.getEarthquakes = async (req, res) => {
         const startDate = new Date(new Date().setDate(endDate.getDate() - 1));
         const formatDateString = (date) => date.toISOString().split('T')[0];
 
+        // Define the latitude and longitude bounds for Central America
+        const minLatitude = 8.0;   // Southernmost point approx.
+        const maxLatitude = 15.0;  // Northernmost point approx.
+        const minLongitude = -93.0; // Westernmost point approx.
+        const maxLongitude = -77.0; // Easternmost point approx.
+
         const response = await axios.get('https://earthquake.usgs.gov/fdsnws/event/1/query', {
             params: {
                 format: 'geojson',
                 starttime: formatDateString(startDate),
-                endtime: formatDateString(endDate)
+                endtime: formatDateString(endDate),
+                minlatitude: minLatitude,
+                maxlatitude: maxLatitude,
+                minlongitude: minLongitude,
+                maxlongitude: maxLongitude
             }
         });
 
