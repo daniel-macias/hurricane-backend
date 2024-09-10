@@ -19,26 +19,14 @@ exports.getTropicalCycloneData = async (req, res) => {
                 res.status(500).send('KML data structure is not as expected');
                 return;
             }
-            let item = 0;
-            const items = result.kml.Document[0].Folder.map(folder => {
-                console.log(item);
-                if(item == 0){
-                    //Header data
-                    console.log(folder);
-                }else if (item == 1){
-                    //Hurricane data
-                    console.log(folder.ExtendedData[1])
-                    console.log(folder.NetworkLink);
-                }else{
-                    //Something went wrong
-                }
-
-                
-                item++;
+            
+            let storms = [];
+            result.kml.Document[0].Folder.forEach((folder, index) => {
+                storms.push(folder); // Appending each folder object to the storms array
             });
             
-
-            res.json(items);
+            console.log(storms);
+            res.json(storms);
         });
     } catch (error) {
         console.error('Error fetching tropical cyclone data:', error);
